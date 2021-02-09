@@ -77,6 +77,9 @@
                 <CheckBox Content="{Binding AlwaysOnTop, Source={StaticResource Loc}, Mode=OneWay}"
                           IsChecked="{Binding Settings.UI.MainWindowTopmost}"
                           Margin="0,2"/>
+                <CheckBox Content="{Binding SaveAsWhenStopRecording, Source={StaticResource Loc}, Mode=OneWay}"
+                          IsChecked="{Binding Settings.SaveAsSettings.Enabled}"
+                          Margin="0,2"/>
 
                 <Button Click="OpenOverlayManager"
                         VerticalAlignment="Top"

@@ -34,13 +34,13 @@
 
         public int Quality
         {
-            get => Get(70);
+            get => Get(40);
             set => Set(value);
         }
 
         public int FrameRate
         {
-            get => Get(10);
+            get => Get(24);
             set => Set(value);
         }
 

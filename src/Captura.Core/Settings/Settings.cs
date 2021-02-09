@@ -86,6 +86,21 @@ namespace Captura
 
         public TextOverlaySettings Elapsed { get; set; } = new TextOverlaySettings();
 
+        public TextOverlaySettings Datetime { get; set; } = new TextOverlaySettings {
+            FontFamily = "Arial",
+            FontSize = 16,
+            Display = true,
+            FontColor = Color.FromArgb(84, 246, 48),
+            HorizontalPadding = 5,
+            VerticalPadding = 3,
+            BackgroundColor = Color.Black,
+            CornerRadius = 0,
+            HorizontalAlignment = Alignment.Center,
+            X = 0,
+            VerticalAlignment = Alignment.Start,
+            Y = 0
+        };
+
         public ObservableCollection<CensorOverlaySettings> Censored { get; } = new ObservableCollection<CensorOverlaySettings>();
         
         public VisualSettings UI { get; } = new VisualSettings();
@@ -109,6 +124,8 @@ namespace Captura
         public TraySettings Tray { get; } = new TraySettings();
 
         public AroundMouseSettings AroundMouse { get; } = new AroundMouseSettings();
+
+        public SaveAsSettings SaveAsSettings { get; } = new SaveAsSettings();
 
         public int PreStartCountdown
         {

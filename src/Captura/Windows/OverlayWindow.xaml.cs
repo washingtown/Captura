@@ -339,6 +339,9 @@ namespace Captura
             var elapsed = Text(settings.Elapsed, "00:00:00");
             AddToGrid(elapsed, false);
 
+            var timestamp = Text(settings.Datetime, DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
+            AddToGrid(timestamp, false);
+
             var textOverlayVm = ServiceProvider.Get<CustomOverlaysViewModel>();
 
             UpdateTextOverlays(textOverlayVm.Collection);

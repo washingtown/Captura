@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Windows.Input;
 using Captura.Models;
 using Reactive.Bindings;
@@ -26,6 +27,7 @@ namespace Captura.ViewModels
         readonly IRecentList _recentList;
         readonly IMessageProvider _messageProvider;
         readonly AudioSourceViewModel _audioSourceViewModel;
+        readonly IDialogService _dialogService;
 
         readonly SynchronizationContext _syncContext = SynchronizationContext.Current;
 
@@ -44,6 +46,7 @@ namespace Captura.ViewModels
             IAudioPlayer AudioPlayer,
             IRecentList RecentList,
             IMessageProvider MessageProvider,
+            IDialogService DialogService,
             AudioSourceViewModel AudioSourceViewModel) : base(Settings, Loc)
         {
             _recordingModel = RecordingModel;
@@ -56,7 +59,7 @@ namespace Captura.ViewModels
             _recentList = RecentList;
             _messageProvider = MessageProvider;
             _audioSourceViewModel = AudioSourceViewModel;
-
+            _dialogService = DialogService;
             RecordCommand = new[]
                 {
                     Settings.Audio
@@ -206,6 +209,57 @@ namespace Captura.ViewModels
             if (savingRecentItem != null)
             {
                 AfterSave(savingRecentItem, notification);
+
+                //另存视频
+                if (Settings.SaveAsSettings.Enabled)
+                {
+                    string ext = Path.GetExtension(savingRecentItem.FileName);
+                    var sfd = new SaveFileDialog
+                    {
+                        CheckPathExists = true,
+                        AddExtension = true,
+                        Filter = $"{ext}文件(*{ext})|*{ext}|所有文件(*.*)|*.*",
+                        DefaultExt = ext.TrimStart('.'),
+                        InitialDirectory = Settings.SaveAsSettings.SaveAsPath,
+                        Title = "保存录像"
+                    };
+
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                    {
+                        string saveAsPath = sfd.FileName;
+                        string dir = Path.GetDirectoryName(saveAsPath);
+                        if (string.IsNullOrEmpty(dir))
+                        {
+                            _messageProvider.ShowError("保存路径不能为空");
+                            return;
+                        }
+                        Settings.SaveAsSettings.SaveAsPath = dir;
+                        if (!Directory.Exists(dir))
+                        {
+                            Directory.CreateDirectory(dir);
+                        }
+                        try
+                        {
+                            if (File.Exists(saveAsPath))
+                            {
+                                File.Delete(saveAsPath);
+                            }
+                            File.Move(savingRecentItem.FileName, saveAsPath);
+                            FileRecentItem newSavingRecentItem = new FileRecentItem(saveAsPath, savingRecentItem.FileType, true);
+                            savingRecentItem.RemoveCommand.ExecuteIfCan();
+                            _recentList.Add(newSavingRecentItem);
+                            FileSaveNotification newNotification = new FileSaveNotification(newSavingRecentItem);
+                            newNotification.OnDelete += () => newSavingRecentItem.RemoveCommand.ExecuteIfCan();
+                            notification.Remove();
+                            _systemTray.ShowNotification(newNotification);
+                            AfterSave(newSavingRecentItem, newNotification);
+                        }
+                        catch (Exception e)
+                        {
+                            _messageProvider.ShowException(e, "另存视频时出错");
+                        }
+                    }
+                }
             }
         }
 
@@ -217,6 +271,7 @@ namespace Captura.ViewModels
                 SavingRecentItem.FileName.WriteToClipboard();
 
             Notification.Saved();
+            
         }
 
         void StartRecording()

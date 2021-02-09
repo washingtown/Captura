@@ -1,3 +1,4 @@
+#tool nuget:?package=vswhere
 #tool nuget:?package=xunit.runner.console&version=2.4.1
 #tool nuget:?package=gitreleasemanager&version=0.8.0
 #l "scripts/backup.cake"
@@ -101,6 +102,7 @@ var cleanTask = Task("Clean").Does(() =>
     MSBuild(slnPath, settings =>
     {
         settings.SetConfiguration(configuration)
+            .UseToolVersion(MSBuildToolVersion.VS2019)
             .SetVerbosity(Verbosity.Minimal)
             .WithTarget("Clean");
     });
@@ -111,6 +113,7 @@ var nugetRestoreTask = Task("Nuget-Restore").Does(() =>
     MSBuild(slnPath, settings =>
     {
         settings.SetConfiguration(configuration)
+            .UseToolVersion(MSBuildToolVersion.VS2019)
             .SetVerbosity(Verbosity.Minimal)
             .WithTarget("Restore");
     });
@@ -131,6 +134,7 @@ var buildTask = Task("Build")
     MSBuild(slnPath, settings =>
     {
         settings.SetConfiguration(configuration)
+            .UseToolVersion(MSBuildToolVersion.VS2019)
             .SetVerbosity(Verbosity.Minimal)
             .WithTarget("Rebuild");
     });

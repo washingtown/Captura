@@ -43,6 +43,7 @@ namespace Captura
         string DownloadFFmpeg { get; }
         string Edit { get; }
         string Elapsed { get; }
+        string Timestamp { get; }
         string ErrorOccurred { get; }
         string Exit { get; }
         string FFmpegFolder { get; }
@@ -124,6 +125,7 @@ namespace Captura
         string RestoreDefaults { get; }
         string Right { get; }
         string SaveToClipboard { get; }
+        string SaveAsWhenStopRecording { get; }
         string Screen { get; }
         string ScreenShot { get; }
         string ScreenShotActiveWindow { get; }

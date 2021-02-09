@@ -64,13 +64,15 @@ namespace Captura
 
                 return new[] { ServiceProvider.AppDir, ServiceProvider.LibDir }
                            .Where(M => M != null)
-                           .FirstOrDefault(M => File.Exists(Path.Combine(M, FFmpegExeName)))
+                           .Select(M => Path.Combine(M, FFmpegExeName))
+                           .FirstOrDefault(M => File.Exists(M))
                        ?? FFmpegExeName;
             }
         }
 
         public static Process StartFFmpeg(string Arguments, string FileName)
         {
+            
             var process = new Process
             {
                 StartInfo =

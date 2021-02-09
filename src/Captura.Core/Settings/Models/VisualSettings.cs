@@ -52,7 +52,7 @@
 
         public string Language
         {
-            get => Get("en");
+            get => Get("zh-CN");
             set => Set(value);
         }
     }

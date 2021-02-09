@@ -251,6 +251,12 @@ namespace Captura
             set => Set(value);
         }
 
+        public string Timestamp
+        {
+            get => Get();
+            set => Set(value);
+        }
+
         public string ErrorOccurred
         {
             get => Get();
@@ -972,6 +978,12 @@ namespace Captura
         }
 
         public string Yes
+        {
+            get => Get();
+            set => Set(value);
+        }
+
+        public string SaveAsWhenStopRecording
         {
             get => Get();
             set => Set(value);
